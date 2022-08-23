@@ -1,0 +1,230 @@
+<!-- 
+        结构：
+        1、节点container创建（关联）
+        2、场景scene创建
+        3、相机camera创建
+        4、orbit控制器创建
+        5、灯光light创建
+        6、实体mesh创建
+        7、渲染器renderer创建
+        8、动画模块（动画更新，orbit控制器更新，渲染render）
+ -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>大家来找茬 - Sdar peng</title>
+    <script src="./js/vendor/three/three.js"></script>
+    <!-- <script src="./jsm/controls/Orbit/OrbitControls.js"></script>  -->
+    <style>
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0px;
+      }
+      body {
+        background-color: transparent;
+        transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        -webkit-transform: matrix3d(
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        );
+        -moz-transform: matrix3d(
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        );
+        perspective: 1400px;
+        -webkit-perspective: 1400px;
+        -moz-perspective: 1400px;
+        transform-style: preserve-3d;
+        -webkit-transform-style: preserve-3d;
+        -moz-transform-style: preserve-3d;
+      }
+
+      #frameL {
+        position: absolute;
+        left: 0%;
+        width: 50%;
+        height: 100%;
+        background-image: -webkit-radial-gradient(
+          circle farthest-corner,
+          rgb(102, 101, 101) 0%,
+          rgb(5, 5, 5) 100%,
+          rgb(255, 234, 0) 100%
+        );
+        background-image: -moz-radial-gradient(
+          circle farthest-corner,
+          rgb(102, 101, 101) 0%,
+          rgb(5, 5, 5) 100%,
+          rgb(255, 234, 0) 100%
+        );
+        background-image: radial-gradient(
+          circle farthest-corner,
+          rgb(102, 101, 101) 0%,
+          rgb(5, 5, 5) 100%,
+          rgb(255, 234, 0) 100%
+        );
+      }
+      #frameR {
+        position: absolute;
+        left: 50%;
+        width: 50%;
+        height: 100%;
+        background-image: -webkit-radial-gradient(
+          circle farthest-corner,
+          rgb(102, 101, 101) 0%,
+          rgb(5, 5, 5) 100%,
+          rgb(255, 234, 0) 100%
+        );
+        background-image: -moz-radial-gradient(
+          circle farthest-corner,
+          rgb(102, 101, 101) 0%,
+          rgb(5, 5, 5) 100%,
+          rgb(255, 234, 0) 100%
+        );
+        background-image: radial-gradient(
+          circle farthest-corner,
+          rgb(102, 101, 101) 0%,
+          rgb(5, 5, 5) 100%,
+          rgb(255, 234, 0) 100%
+        );
+      }
+      .timebar {
+        position: absolute;
+        top: 0px;
+        height: 60px;
+        width: 60%;
+        left: 20%;
+        background-color: transparent;
+        border-style: solid;
+        border-width: 2px;
+        background: -webkit-linear-gradient(
+          90deg,
+          rgb(255, 255, 255) 0%,
+          rgb(0, 0, 0) 100%
+        );
+        background: -moz-linear-gradient(
+          90deg,
+          rgb(255, 255, 255) 0%,
+          rgb(0, 0, 0) 100%
+        );
+        background: linear-gradient(
+          0deg,
+          rgb(255, 255, 255) 0%,
+          rgb(0, 0, 0) 100%
+        );
+        border-radius: 30px;
+        border-image-source: none;
+        border-image-width: 1;
+        border-image-outset: 0;
+        border-image-repeat: stretch;
+        border-color: rgb(250, 249, 249);
+      }
+      .item {
+        top: 0px;
+        height: 60px;
+        border-radius: 10px;
+        border-style: solid;
+        border-width: 2px;
+        width: 60px;
+        position: relative;
+        left: 81%;
+      }
+      .txt1 {
+        position: absolute;
+        width: 100px;
+        height: 68px;
+        font-size: 48px;
+        left: 30%;
+        top: 10px;
+        font-style: italic;
+        color: rgb(0, 243, 243);
+        text-shadow: 5px 2px 6px #000;
+      }
+      .txt2 {
+        left: 55%;
+      }
+      .timeleft {
+        position: absolute;
+        height: 100%;
+        width: 80%;
+        border-top-left-radius: 30px;
+        border-bottom-left-radius: 30px;
+        background-color: transparent;
+        background: -webkit-linear-gradient(
+          0deg,
+          rgb(248, 3, 3) 0%,
+          rgb(255, 234, 0) 50%,
+          rgb(12, 239, 2) 100%
+        );
+        background: -moz-linear-gradient(
+          0deg,
+          rgb(248, 3, 3) 0%,
+          rgb(255, 234, 0) 50%,
+          rgb(12, 239, 2) 100%
+        );
+        background: linear-gradient(
+          90deg,
+          rgb(248, 3, 3) 0%,
+          rgb(255, 234, 0) 50%,
+          rgb(12, 239, 2) 100%
+        );
+        left: 0px;
+        top: 0px;
+      }
+      .highlight {
+        position: absolute;
+        background-image: none;
+        background-color: rgba(248, 248, 248, 0.39);
+        border-radius: 20px;
+        height: 20px;
+        top: 10px;
+        width: 95%;
+        left: 3%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="frameL"></div>
+    <div id="frameR"></div>
+    <div class="timebar">
+      <div id="timeleft" class="timeleft"></div>
+      <div class="highlight"></div>
+    </div>
+    <div id="item" class="item"></div>
+    <p class="txt1">Found</p>
+    <p id="founded" class="txt1 txt2">3</p>
+
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>
